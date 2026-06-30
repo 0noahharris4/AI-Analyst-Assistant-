@@ -1,0 +1,1322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AI Data Analyst</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── Midnight Slate Variables ────────────────────────────────── */
+:root {
+  --primary:       #6366f1;   /* indigo */
+  --primary-light: #818cf8;
+  --primary-pale:  #a5b4fc;
+  --primary-glow:  rgba(99,102,241,0.18);
+  --accent1:       #10b981;   /* emerald */
+  --accent2:       #f59e0b;   /* amber */
+  --accent3:       #ef4444;   /* red */
+  --dark:          #0b0c14;   /* navbar */
+  --bg:            #0f1117;   /* page background */
+  --surface:       #1a1b2e;   /* cards */
+  --surface2:      #232438;   /* elevated / thead */
+  --border:        rgba(99,102,241,0.18);
+  --text:          #e2e8f0;
+  --muted:         #8892a4;
+  --radius:        10px;
+  --shadow:        0 1px 3px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.3);
+  --nav-h:         64px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── Navbar ────────────────────────────────────────────────── */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--dark);
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(99,102,241,0.25);
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+.nav-icon { flex-shrink: 0; }
+.nav-title {
+  font-family: 'Fira Mono', monospace;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #fff;
+}
+.nav-title span { color: var(--primary-pale); }
+.nav-sub {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.35);
+  margin-left: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Section tabs ──────────────────────────────────────────── */
+.section-tabs {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.section-tabs::-webkit-scrollbar { display: none; }
+.tabs-inner {
+  display: flex;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: Inter, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 14px 18px;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--primary-pale); border-bottom-color: var(--primary); }
+
+/* ── Layout ────────────────────────────────────────────────── */
+.page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ── Upload hero ───────────────────────────────────────────── */
+.upload-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - var(--nav-h) - 4rem);
+  text-align: center;
+  padding: 2rem 0;
+}
+.upload-headline {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+.upload-headline span { color: var(--primary-light); }
+.upload-tagline {
+  color: var(--muted);
+  font-size: 1rem;
+  max-width: 500px;
+  margin-bottom: 2.5rem;
+}
+.drop-zone {
+  width: 100%;
+  max-width: 520px;
+  border: 2px dashed rgba(99,102,241,0.35);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+  background: var(--surface);
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--primary);
+  background: rgba(99,102,241,0.07);
+}
+.drop-icon { margin-bottom: 1rem; opacity: 0.4; }
+.drop-text { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 0.3rem; }
+.drop-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.25rem; }
+.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--primary);
+  color: #fff;
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 11px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.upload-btn:hover { background: #4f46e5; transform: translateY(-1px); }
+#file-input { display: none; }
+
+/* ── Loading overlay ───────────────────────────────────────── */
+.loading-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(11,12,20,0.85);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.loading-overlay.active { display: flex; }
+.loading-text {
+  color: var(--primary-pale);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.3px;
+}
+.google-dots { display: flex; gap: 8px; }
+.gdot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  animation: gdotBounce 1.2s infinite both;
+}
+.gdot:nth-child(1){ background: var(--primary);       animation-delay: 0s;    }
+.gdot:nth-child(2){ background: var(--primary-light);  animation-delay: 0.15s; }
+.gdot:nth-child(3){ background: var(--primary-pale);   animation-delay: 0.3s;  }
+.gdot:nth-child(4){ background: #c7d2fe;               animation-delay: 0.45s; }
+@keyframes gdotBounce {
+  0%,80%,100%{ transform: scale(0.7); opacity:0.5; }
+  40%{ transform: scale(1.25); opacity:1; }
+}
+
+/* ── Result sections ───────────────────────────────────────── */
+.results { display: none; }
+.results.visible { display: block; }
+.section {
+  margin-bottom: 2rem;
+  scroll-margin-top: calc(var(--nav-h) + 50px);
+}
+.section-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 1.1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+.section-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.section-body { padding: 1.5rem; }
+
+/* ── Stat cards ────────────────────────────────────────────── */
+.stat-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+.stat-card {
+  flex: 1;
+  min-width: 130px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  text-align: center;
+}
+.stat-num {
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-lbl {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+}
+
+/* ── Badges ────────────────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin: 2px;
+}
+.badge-blue   { background: rgba(99,102,241,0.18);  color: var(--primary-pale); }
+.badge-green  { background: rgba(16,185,129,0.15);  color: #34d399; }
+.badge-yellow { background: rgba(245,158,11,0.15);  color: #fcd34d; }
+.badge-red    { background: rgba(239,68,68,0.15);   color: #fca5a5; }
+.badge-gray   { background: rgba(136,146,164,0.12); color: var(--muted); }
+
+/* ── Tables ────────────────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+thead th {
+  background: var(--surface2);
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+tbody td {
+  padding: 9px 14px;
+  border-bottom: 1px solid rgba(99,102,241,0.08);
+  color: var(--text);
+  white-space: nowrap;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: rgba(99,102,241,0.06); }
+
+/* ── Corr bar ──────────────────────────────────────────────── */
+.corr-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.corr-bar { height: 6px; border-radius: 3px; min-width: 4px; }
+.corr-pos { background: var(--primary); }
+.corr-neg { background: var(--accent3); }
+
+/* ── Missing bar ───────────────────────────────────────────── */
+.miss-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.miss-bar-bg { flex: 1; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.miss-bar-fill { height: 100%; border-radius: 3px; background: var(--accent2); }
+
+/* ── Charts grid ───────────────────────────────────────────── */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 1rem;
+}
+.chart-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.chart-caption {
+  padding: 8px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+.chart-card img { width: 100%; display: block; }
+
+/* ── AI insights ───────────────────────────────────────────── */
+.ai-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-label { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
+.form-select {
+  font-family: Inter, sans-serif;
+  font-size: 0.88rem;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 8px 12px;
+  background: var(--surface2);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-select:focus { border-color: var(--primary); }
+.btn-ai {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: Inter, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  color: #fff;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.btn-ai:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-ai:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.ai-output {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  font-size: 0.93rem;
+  color: var(--text);
+  display: none;
+}
+.ai-output.visible { display: block; }
+
+/* ── Clean button ──────────────────────────────────────────── */
+.btn-clean {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  border: 1.5px solid var(--accent1);
+  cursor: pointer;
+  font-family: Inter, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  background: transparent;
+  color: #34d399;
+  margin-top: 1.25rem;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-clean:hover { background: var(--accent1); color: #fff; }
+.btn-clean:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Info / warning banners ────────────────────────────────── */
+.info-banner {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+.banner-blue   { background: rgba(99,102,241,0.12);  color: var(--primary-pale); border: 1px solid rgba(99,102,241,0.28); }
+.banner-yellow { background: rgba(245,158,11,0.12);  color: #fcd34d;              border: 1px solid rgba(245,158,11,0.3);  }
+.banner-green  { background: rgba(16,185,129,0.12);  color: #34d399;              border: 1px solid rgba(16,185,129,0.3);  }
+.banner-red    { background: rgba(239,68,68,0.12);   color: #fca5a5;              border: 1px solid rgba(239,68,68,0.3);   }
+
+/* ── Subsection label ──────────────────────────────────────── */
+.subsection-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin: 1.5rem 0 0.75rem;
+}
+.subsection-label:first-child { margin-top: 0; }
+
+/* ── Dtype tag list ────────────────────────────────────────── */
+.dtype-list { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ── Cleaning summary ──────────────────────────────────────── */
+.clean-result {
+  display: none;
+  margin-top: 1.25rem;
+  background: rgba(16,185,129,0.08);
+  border: 1px solid rgba(16,185,129,0.25);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+.clean-result.visible { display: block; }
+
+/* ── Demo button ───────────────────────────────────────────── */
+.demo-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.demo-divider {
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+.btn-demo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(99,102,241,0.4);
+  cursor: pointer;
+  font-family: Inter, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  background: transparent;
+  color: var(--primary-pale);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.btn-demo:hover {
+  background: rgba(99,102,241,0.12);
+  border-color: var(--primary);
+  color: #fff;
+}
+.btn-demo:disabled { opacity: 0.5; cursor: not-allowed; }
+.demo-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(16,185,129,0.15);
+  color: #34d399;
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 4px;
+  padding: 1px 7px;
+}
+
+/* ── Footer ────────────────────────────────────────────────── */
+footer {
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .navbar { padding: 0 1rem; }
+  .nav-sub { display: none; }
+  .page { padding: 1.25rem 1rem 3rem; }
+  .section-body { padding: 1rem; }
+  .charts-grid { grid-template-columns: 1fr; }
+  .stat-card { min-width: 100px; }
+  .ai-controls { flex-direction: column; align-items: stretch; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<nav class="navbar">
+  <a href="/" class="nav-logo">
+    <svg class="nav-icon" width="40" height="26" viewBox="0 0 150 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="50" width="25" height="30" rx="5" fill="#6366f1"/>
+      <rect x="45" y="30" width="25" height="50" rx="5" fill="#818cf8"/>
+      <rect x="80" y="15" width="25" height="65" rx="5" fill="#a5b4fc"/>
+      <rect x="115" y="5"  width="20" height="75" rx="5" fill="#c7d2fe"/>
+      <polyline points="22.5,65 57.5,55 92.5,35 125,25" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+      <circle cx="125" cy="25" r="10" fill="#6366f1" stroke="#fff" stroke-width="2.5"/>
+      <text x="125" y="30" text-anchor="middle" font-size="12" font-family="Arial" fill="#fff" font-weight="bold">AI</text>
+    </svg>
+    <div>
+      <div class="nav-title">AI Data <span>Analyst</span></div>
+    </div>
+  </a>
+  <span class="nav-sub">Fast, intelligent data analysis — from upload to insight in seconds</span>
+</nav>
+
+<!-- ── Section tabs ── -->
+<div class="section-tabs" id="section-tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="scrollToSection('overview')">Overview</button>
+    <button class="tab-btn" onclick="scrollToSection('quality')">Data Quality</button>
+    <button class="tab-btn" onclick="scrollToSection('stats')">Statistics</button>
+    <button class="tab-btn" onclick="scrollToSection('distributions')">Distributions</button>
+    <button class="tab-btn" onclick="scrollToSection('correlation')">Correlation</button>
+    <button class="tab-btn" onclick="scrollToSection('timeseries')">Time Series</button>
+    <button class="tab-btn" onclick="scrollToSection('ai')">AI Insights</button>
+  </div>
+</div>
+
+<!-- ── Loading overlay ── -->
+<div class="loading-overlay" id="loading">
+  <div class="google-dots">
+    <div class="gdot"></div><div class="gdot"></div>
+    <div class="gdot"></div><div class="gdot"></div>
+  </div>
+  <div class="loading-text" id="loading-text">Analyzing your data…</div>
+</div>
+
+<!-- ── Main page ── -->
+<main class="page">
+
+  <!-- Upload -->
+  <div id="upload-section">
+    <div class="upload-hero">
+      <h1 class="upload-headline">AI Data <span>Analyst</span></h1>
+      <p class="upload-tagline">Upload a CSV file to begin an analysis. Get descriptive statistics, distributions, correlations, and AI-generated insights.</p>
+      <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+        <div class="drop-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <div class="drop-text">Drag &amp; drop your CSV file here</div>
+        <div class="drop-sub">or click to browse</div>
+        <button class="upload-btn" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Choose File
+        </button>
+        <div class="drop-sub" style="margin-top:0.75rem;margin-bottom:0">CSV files only · No size limit</div>
+        <input type="file" id="file-input" accept=".csv">
+      </div>
+
+      <!-- Try Demo -->
+      <div class="demo-row">
+        <span class="demo-divider">— or —</span>
+        <button class="btn-demo" id="demo-btn" onclick="loadDemo()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          Try Demo Dataset
+          <span class="demo-badge">250 rows</span>
+        </button>
+      </div>
+      <p style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted);max-width:400px;text-align:center">
+        Retail sales data — dates, regions, revenue, satisfaction scores, and more.
+      </p>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="results" id="results">
+
+    <!-- Overview -->
+    <div class="section" id="overview">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-dot" style="background:var(--primary)"></div>
+          <div class="section-title">Dataset Overview</div>
+        </div>
+        <div class="section-body">
+          <div class="stat-row" id="shape-stats"></div>
+          <div class="subsection-label">Column Types</div>
+          <div class="dtype-list" id="dtype-list"></div>
+          <div class="subsection-label" style="margin-top:1.25rem">Preview (first 50 rows)</div>
+          <div class="table-wrap" id="preview-table"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Quality -->
+    <div class="section" id="quality">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-dot" style="background:var(--accent2)"></div>
+          <div class="section-title">Data Quality</div>
+        </div>
+        <div class="section-body">
+          <div id="quality-stats" class="stat-row"></div>
+          <div id="quality-issues"></div>
+          <div class="subsection-label">Missing Values</div>
+          <div class="table-wrap" id="missing-table"></div>
+          <button class="btn-clean" id="clean-btn" onclick="cleanDataset()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Clean Dataset
+          </button>
+          <div class="clean-result" id="clean-result">
+            <div id="clean-summary"></div>
+            <div class="subsection-label" style="margin-top:1rem">Cleaned Preview</div>
+            <div class="table-wrap" id="clean-preview-table"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="section" id="stats">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-dot" style="background:var(--accent1)"></div>
+          <div class="section-title">Descriptive Statistics</div>
+        </div>
+        <div class="section-body">
+          <div class="subsection-label">Numeric Columns</div>
+          <div class="table-wrap" id="numeric-stats-table"></div>
+          <div class="subsection-label">Categorical Columns</div>
+          <div id="cat-stats-wrap"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Distributions -->
+    <div class="section" id="distributions">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-dot" style="background:var(--primary-light)"></div>
+          <div class="section-title">Distributions</div>
+        </div>
+        <div class="section-body">
+          <div class="subsection-label">Numeric Distributions</div>
+          <div class="charts-grid" id="num-charts"></div>
+          <div class="subsection-label">Categorical Distributions</div>
+          <div class="charts-grid" id="cat-charts"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Correlation -->
+    <div class="section" id="correlation">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-dot" style="background:var(--accent3)"></div>
+          <div class="section-title">Correlation &amp; Relationships</div>
+        </div>
+        <div class="section-body">
+          <div id="corr-warnings"></div>
+          <div class="subsection-label">Top Correlation Pairs</div>
+          <div class="table-wrap" id="corr-table"></div>
+          <div class="subsection-label" style="margin-top:1.5rem">Correlation Heatmap</div>
+          <div id="corr-heatmap"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Time Series -->
+    <div class="section" id="timeseries">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-dot" style="background:var(--primary-pale)"></div>
+          <div class="section-title">Time Series</div>
+        </div>
+        <div class="section-body" id="ts-body">
+          <div class="info-banner banner-blue">Analyzing for datetime columns…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Insights -->
+    <div class="section" id="ai">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-dot" style="background:var(--accent1)"></div>
+          <div class="section-title">AI Analysis Report</div>
+        </div>
+        <div class="section-body">
+          <div class="ai-controls">
+            <div class="form-group">
+              <label class="form-label">Model</label>
+              <select class="form-select" id="model-select">
+                <option value="gpt-4o-mini">gpt-4o-mini (fast)</option>
+                <option value="gpt-4o">gpt-4o</option>
+                <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Temperature: <span id="temp-val">0.2</span></label>
+              <input type="range" class="form-select" id="temp-range" min="0" max="1" step="0.1" value="0.2"
+                oninput="document.getElementById('temp-val').textContent=this.value" style="padding:8px 0;border:none;background:none;cursor:pointer">
+            </div>
+            <button class="btn-ai" id="ai-btn" onclick="generateInsights()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              Generate AI Insights
+            </button>
+          </div>
+          <div class="ai-output" id="ai-output"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /results -->
+</main>
+
+<footer>AI Data Analyst &nbsp;·&nbsp; Powered by Flask + OpenAI &nbsp;·&nbsp; <a href="/" style="color:var(--primary-pale)">Upload new file</a></footer>
+
+<script>
+const state = { sessionId: null };
+
+const dropZone  = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+
+dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('dragover');
+  const f = e.dataTransfer.files[0];
+  if (f) handleFile(f);
+});
+fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
+
+// ── Demo CSV embedded inline — works with no server ──────────
+const DEMO_CSV = `date,region,category,sales_rep,revenue,units_sold,discount_pct,satisfaction,shipping_days,returned
+2022-01-01,West,Books,Carol,124.79,3,30.1,7.0,3,No
+2022-01-02,Central,Sports,Bob,542.59,2,29.0,9.8,2,No
+2022-01-03,East,Home & Garden,Bob,576.81,3,24.6,7.7,3,No
+2022-01-04,Central,Home & Garden,Carol,473.69,6,30.6,8.9,1,No
+2022-01-05,Central,Apparel,Frank,249.06,1,24.9,8.2,1,No
+2022-01-06,East,Electronics,David,1238.5,8,24.6,8.4,3,No
+2022-01-07,East,Electronics,Alice,700.62,4,27.0,7.5,3,No
+2022-01-08,West,Apparel,Carol,266.39,4,28.3,8.0,2,No
+2022-01-09,South,Electronics,Alice,700.13,3,25.6,8.6,2,No
+2022-01-10,North,Books,Eve,120.71,4,26.6,6.8,2,No
+2022-01-11,South,Electronics,Frank,979.31,5,28.2,7.8,3,No
+2022-01-12,North,Apparel,Frank,286.88,5,30.6,8.2,2,No
+2022-01-13,South,Electronics,Eve,835.7,5,27.0,7.2,3,No
+2022-01-14,East,Sports,Alice,607.64,5,25.7,7.3,4,No
+2022-01-15,Central,Electronics,Bob,978.57,6,22.8,,2,No
+2022-01-16,West,Apparel,Frank,334.58,6,27.8,6.9,3,No
+2022-01-17,North,Home & Garden,David,537.43,4,27.7,7.3,3,No
+2022-01-18,East,Electronics,Eve,1102.72,7,24.8,8.7,2,No
+2022-01-19,South,Books,Carol,156.38,6,,8.0,3,No
+2022-01-20,North,Sports,Alice,624.18,5,26.5,8.4,3,No
+2022-01-21,West,Electronics,David,1161.01,7,25.5,8.2,2,No
+2022-01-22,Central,Home & Garden,Eve,428.78,3,29.1,9.2,2,No
+2022-01-23,South,Apparel,Frank,295.17,5,26.2,8.7,3,No
+2022-01-24,East,Books,Bob,114.04,3,29.4,7.5,3,No
+2022-01-25,North,Electronics,Carol,1067.27,6,23.1,7.9,2,No
+2022-01-26,West,Sports,David,487.82,4,27.8,8.1,4,No
+2022-01-27,Central,Apparel,Alice,270.11,3,28.9,,1,No
+2022-01-28,South,Home & Garden,Frank,512.65,4,26.1,7.6,3,No
+2022-01-29,North,Books,Eve,130.08,5,25.3,6.7,2,No
+2022-01-30,East,Electronics,Bob,895.26,5,23.7,7.4,3,No
+2022-01-31,West,Sports,Carol,631.18,6,24.8,9.0,2,No
+2022-02-01,South,Apparel,David,310.45,4,27.3,8.3,3,No
+2022-02-02,Central,Electronics,Alice,1045.8,7,22.5,7.7,2,No
+2022-02-03,North,Home & Garden,Frank,558.92,4,28.4,8.5,3,No
+2022-02-04,East,Books,Carol,99.35,2,31.2,6.5,4,No
+2022-02-05,West,Electronics,Eve,1198.44,8,23.8,8.0,2,No
+2022-02-06,South,Sports,Bob,576.13,5,25.9,7.9,3,No
+2022-02-07,Central,Apparel,David,245.77,3,29.7,8.1,2,No
+2022-02-08,North,Electronics,Alice,1012.34,6,24.2,7.3,3,No
+2022-02-09,East,Home & Garden,Frank,493.61,4,27.1,8.8,2,No
+2022-02-10,West,Books,Carol,141.27,4,26.8,7.1,3,No
+2022-02-11,South,Electronics,Eve,873.58,5,24.0,8.4,2,No
+2022-02-12,North,Apparel,Bob,302.14,5,28.0,7.6,3,No
+2022-02-13,Central,Sports,David,541.89,4,26.3,,2,No
+2022-02-14,East,Electronics,Alice,1156.72,8,23.3,7.8,2,No
+2022-02-15,West,Home & Garden,Frank,476.44,3,28.6,8.9,4,No
+2022-02-16,South,Books,Carol,127.91,3,,6.9,3,No
+2022-02-17,North,Electronics,Eve,938.15,6,24.5,7.5,2,No
+2022-02-18,Central,Apparel,Bob,278.63,4,27.6,8.2,3,No
+2022-02-19,East,Sports,David,559.27,5,25.4,8.0,2,No
+2022-02-20,West,Electronics,Alice,1087.93,7,23.9,7.2,3,No
+2022-02-21,South,Home & Garden,Frank,521.34,4,27.3,9.1,2,No
+2022-02-22,North,Books,Carol,108.76,3,30.4,6.6,4,No
+2022-02-23,Central,Electronics,Eve,1023.45,6,24.1,7.9,2,No
+2022-02-24,East,Apparel,Bob,261.88,3,28.7,8.3,3,No
+2022-02-25,West,Sports,David,595.42,5,25.1,8.6,2,No
+2022-02-26,South,Electronics,Alice,912.67,6,23.6,7.4,3,No
+2022-02-27,North,Home & Garden,Frank,484.19,4,27.9,8.8,2,No
+2022-02-28,Central,Books,Carol,135.54,4,26.4,7.0,3,No
+2022-03-01,East,Electronics,Eve,1173.28,8,23.2,8.1,2,No
+2022-03-02,West,Apparel,Bob,318.73,5,27.4,7.7,3,No
+2022-03-03,South,Sports,David,568.91,5,25.8,8.4,2,No
+2022-03-04,North,Electronics,Alice,997.43,6,24.3,7.6,3,No
+2022-03-05,Central,Home & Garden,Frank,505.67,4,27.0,9.0,2,No
+2022-03-06,East,Books,Carol,118.32,3,29.8,6.8,4,No
+2022-03-07,West,Electronics,Eve,1142.86,7,23.5,8.2,2,No
+2022-03-08,South,Apparel,Bob,287.45,4,28.1,7.5,3,No
+2022-03-09,North,Sports,David,547.63,5,26.0,8.7,2,No
+2022-03-10,Central,Electronics,Alice,1068.91,7,23.8,7.8,3,No
+2022-03-11,East,Home & Garden,Frank,467.25,3,28.3,9.3,2,No
+2022-03-12,West,Books,Carol,95.18,2,31.6,6.4,5,No
+2022-03-13,South,Electronics,Eve,857.34,5,24.1,7.1,3,No
+2022-03-14,North,Apparel,Bob,296.82,5,27.8,8.0,2,No
+2022-03-15,Central,Sports,David,533.17,4,26.5,,3,No
+2022-03-16,East,Electronics,Alice,1121.54,7,23.4,7.9,2,No
+2022-03-17,West,Home & Garden,Frank,499.83,4,27.5,8.6,3,No
+2022-03-18,South,Books,Carol,,3,28.9,7.2,3,No
+2022-03-19,North,Electronics,Eve,974.27,6,24.0,7.7,2,No
+2022-03-20,Central,Apparel,Bob,263.91,3,28.5,8.4,3,No
+2022-03-21,East,Sports,David,578.46,5,25.3,8.1,2,No
+2022-03-22,West,Electronics,Alice,1095.73,7,23.7,7.3,3,No
+2022-03-23,South,Home & Garden,Frank,513.28,4,27.2,9.2,2,No
+2022-03-24,North,Books,Carol,122.64,4,26.7,6.7,4,No
+2022-03-25,Central,Electronics,Eve,1031.87,6,24.2,8.0,2,No
+2022-03-26,East,Apparel,Bob,274.19,4,27.6,7.8,3,No
+2022-03-27,West,Sports,David,601.35,5,24.9,8.5,2,No
+2022-03-28,South,Electronics,Alice,921.48,6,23.5,7.6,3,No
+2022-03-29,North,Home & Garden,Frank,488.74,4,27.8,8.9,2,No
+2022-03-30,Central,Books,Carol,139.87,4,26.2,7.1,3,No
+2022-03-31,East,Electronics,Eve,1184.63,8,23.1,8.2,2,No
+2022-04-01,West,Apparel,Bob,325.46,5,27.3,7.6,3,No
+2022-04-02,South,Sports,David,572.84,5,25.7,8.3,2,No
+2022-04-03,North,Electronics,Alice,1004.26,6,24.1,7.5,3,No
+2022-04-04,Central,Home & Garden,Frank,509.43,4,26.9,9.1,2,No
+2022-04-05,East,Books,Carol,103.75,2,30.2,6.6,5,No
+2022-04-06,West,Electronics,Eve,1151.37,7,23.4,8.3,2,No
+2022-04-07,South,Apparel,Bob,291.68,4,28.0,7.4,3,No
+2022-04-08,North,Sports,David,551.92,5,25.9,8.6,2,No
+2022-04-09,Central,Electronics,Alice,1074.54,7,23.7,7.9,3,No
+2022-04-10,East,Home & Garden,Frank,471.38,3,28.2,9.4,2,No
+2022-04-11,West,Books,Carol,111.43,3,29.6,6.5,4,No
+2022-04-12,South,Electronics,Eve,865.79,5,24.0,7.2,3,No
+2022-04-13,North,Apparel,Bob,300.25,5,27.7,8.1,2,No
+2022-04-14,Central,Sports,David,537.63,4,,8.5,3,No
+2022-04-15,East,Electronics,Alice,1129.87,7,23.3,8.0,2,No
+2022-04-16,West,Home & Garden,Frank,503.56,4,27.4,8.7,3,No
+2022-04-17,South,Books,Carol,129.34,3,27.1,7.0,3,No
+2022-04-18,North,Electronics,Eve,981.63,6,23.9,7.8,2,No
+2022-04-19,Central,Apparel,Bob,268.47,3,28.4,8.5,3,No
+2022-04-20,East,Sports,David,583.27,5,25.2,8.2,2,No
+2022-04-21,West,Electronics,Alice,1103.18,7,23.6,7.4,3,No
+2022-04-22,South,Home & Garden,Frank,517.83,4,27.1,9.3,2,No
+2022-04-23,North,Books,Carol,126.91,4,26.5,6.8,4,No
+2022-04-24,Central,Electronics,Eve,1038.74,6,24.1,8.1,2,No
+2022-04-25,East,Apparel,Bob,279.32,4,27.5,7.9,3,No
+2022-04-26,West,Sports,David,606.48,5,24.8,8.4,2,No
+2022-04-27,South,Electronics,Alice,928.91,6,23.4,7.7,3,No
+2022-04-28,North,Home & Garden,Frank,492.37,4,27.7,9.0,2,No
+2022-04-29,Central,Books,Carol,143.62,4,26.1,7.2,3,No
+2022-04-30,East,Electronics,Eve,1191.48,8,23.0,8.3,2,No
+2022-05-01,West,Apparel,Bob,331.83,5,27.2,7.5,3,No
+2022-05-02,South,Sports,David,577.17,5,25.6,8.2,2,No
+2022-05-03,North,Electronics,Alice,1011.37,6,24.0,7.4,3,No
+2022-05-04,Central,Home & Garden,Frank,513.28,4,26.8,9.2,2,No
+2022-05-05,East,Books,Carol,107.48,2,30.0,6.7,5,No
+2022-05-06,West,Electronics,Eve,1159.82,7,23.3,8.4,2,No
+2022-05-07,South,Apparel,Bob,295.43,4,27.9,7.3,3,No
+2022-05-08,North,Sports,David,556.25,5,25.8,8.5,2,No
+2022-05-09,Central,Electronics,Alice,1081.37,7,23.6,8.0,3,No
+2022-05-10,East,Home & Garden,Frank,475.63,3,28.1,9.5,2,No
+2022-05-11,West,Books,Carol,114.86,3,29.4,6.6,4,No
+2022-05-12,South,Electronics,Eve,873.64,5,23.9,7.3,3,No
+2022-05-13,North,Apparel,Bob,303.82,5,27.6,8.2,2,No
+2022-05-14,Central,Sports,David,542.17,4,26.3,8.6,3,No
+2022-05-15,East,Electronics,Alice,1137.42,7,23.2,8.1,2,No
+2022-05-16,West,Home & Garden,Frank,507.29,4,27.3,8.8,3,No
+2022-05-17,South,Books,Carol,132.77,3,26.9,7.1,3,No
+2022-05-18,North,Electronics,Eve,988.99,6,23.8,7.9,2,No
+2022-05-19,Central,Apparel,Bob,272.83,3,28.3,8.6,3,No
+2022-05-20,East,Sports,David,587.68,5,25.1,8.3,2,No
+2022-05-21,West,Electronics,Alice,1110.73,7,23.5,7.5,3,No
+2022-05-22,South,Home & Garden,Frank,522.38,4,27.0,9.4,2,No
+2022-05-23,North,Books,Carol,130.48,4,26.3,6.9,4,No
+2022-05-24,Central,Electronics,Eve,1046.27,6,24.0,8.2,2,No
+2022-05-25,East,Apparel,Bob,283.87,4,27.4,8.0,3,No
+2022-05-26,West,Sports,David,611.63,5,24.7,8.3,2,No
+2022-05-27,South,Electronics,Alice,935.64,6,23.3,7.8,3,No
+2022-05-28,North,Home & Garden,Frank,496.82,4,27.6,9.1,2,No
+2022-05-29,Central,Books,Carol,147.37,4,26.0,7.3,3,No
+2022-05-30,East,Electronics,Eve,1198.33,8,22.9,8.4,2,No
+2022-05-31,West,Apparel,Bob,338.18,5,27.1,7.4,3,No
+2022-06-01,South,Sports,David,581.28,5,25.5,8.1,2,No
+2022-06-02,North,Electronics,Alice,1018.48,6,23.9,7.3,3,No
+2022-06-03,Central,Home & Garden,Frank,517.13,4,26.7,9.3,2,No
+2022-06-04,East,Books,Carol,111.21,2,29.8,6.8,5,No
+2022-06-05,West,Electronics,Eve,1168.27,7,23.2,8.5,2,No
+2022-06-06,South,Apparel,Bob,299.18,4,27.8,7.2,3,No
+2022-06-07,North,Sports,David,560.38,5,25.7,8.4,2,No
+2022-06-08,Central,Electronics,Alice,1088.02,7,23.5,8.1,3,No
+2022-06-09,East,Home & Garden,Frank,479.88,3,28.0,9.6,2,No
+2022-06-10,West,Books,Carol,118.29,3,29.2,6.7,4,No
+2022-06-11,South,Electronics,Eve,881.49,5,23.8,7.4,3,No
+2022-06-12,North,Apparel,Bob,307.39,5,27.5,8.3,2,No
+2022-06-13,Central,Sports,David,546.71,4,26.2,,3,No
+2022-06-14,East,Electronics,Alice,1144.97,7,23.1,8.2,2,No
+2022-06-15,West,Home & Garden,Frank,511.02,4,27.2,8.9,3,No
+2022-06-16,South,Books,Carol,136.2,3,26.7,7.2,3,No
+2022-06-17,North,Electronics,Eve,996.35,6,23.7,8.0,2,No
+2022-06-18,Central,Apparel,Bob,277.19,3,28.2,8.7,3,No
+2022-06-19,East,Sports,David,592.09,5,25.0,8.4,2,No
+2022-06-20,West,Electronics,Alice,1118.28,7,23.4,7.6,3,No
+2022-06-21,South,Home & Garden,Frank,526.93,4,26.9,9.5,2,No
+2022-06-22,North,Books,Carol,134.05,4,26.1,7.0,4,No
+2022-06-23,Central,Electronics,Eve,1053.82,6,23.9,8.3,2,No
+2022-06-24,East,Apparel,Bob,288.42,4,27.3,8.1,3,No
+2022-06-25,West,Sports,David,616.78,5,24.6,8.2,2,No
+2022-06-26,South,Electronics,Alice,942.37,6,23.2,7.9,3,No
+2022-06-27,North,Home & Garden,Frank,501.27,4,27.5,9.2,2,No
+2022-06-28,Central,Books,Carol,151.12,4,25.9,7.4,3,No
+2022-06-29,East,Electronics,Eve,1205.18,8,22.8,8.5,2,No
+2022-06-30,West,Apparel,Bob,344.53,5,27.0,7.3,3,No
+2022-07-01,South,Sports,David,585.39,5,25.4,8.0,2,No
+2022-07-02,North,Electronics,Alice,1025.59,6,23.8,7.2,3,No
+2022-07-03,Central,Home & Garden,Frank,520.98,4,26.6,9.4,2,No
+2022-07-04,East,Books,Carol,114.94,2,29.6,6.9,5,No
+2022-07-05,West,Electronics,Eve,1176.72,7,23.1,8.6,2,No
+2022-07-06,South,Apparel,Bob,302.93,4,27.7,7.1,3,No
+2022-07-07,North,Sports,David,564.51,5,25.6,8.3,2,No
+2022-07-08,Central,Electronics,Alice,1094.67,7,23.4,8.2,3,No
+2022-07-09,East,Home & Garden,Frank,484.13,3,27.9,9.7,2,No
+2022-07-10,West,Books,Carol,121.72,3,29.0,6.8,4,No
+2022-07-11,South,Electronics,Eve,889.34,5,23.7,7.5,3,No
+2022-07-12,North,Apparel,Bob,310.96,5,27.4,8.4,2,No
+2022-07-13,Central,Sports,David,551.25,4,26.1,8.7,3,No
+2022-07-14,East,Electronics,Alice,1152.52,7,23.0,8.3,2,No
+2022-07-15,West,Home & Garden,Frank,514.75,4,27.1,9.0,3,No
+2022-07-16,South,Books,Carol,139.63,3,26.5,7.3,3,No
+2022-07-17,North,Electronics,Eve,1003.71,6,23.6,8.1,2,No
+2022-07-18,Central,Apparel,Bob,281.55,3,28.1,8.8,3,No
+2022-07-19,East,Sports,David,596.5,5,24.9,8.5,2,No
+2022-07-20,West,Electronics,Alice,1125.83,7,23.3,7.7,3,No
+2022-07-21,South,Home & Garden,Frank,531.48,4,26.8,9.6,2,No
+2022-07-22,North,Books,Carol,137.62,4,25.9,7.1,4,No
+2022-07-23,Central,Electronics,Eve,1061.37,6,23.8,8.4,2,No
+2022-07-24,East,Apparel,Bob,292.97,4,27.2,8.2,3,No
+2022-07-25,West,Sports,David,621.93,5,24.5,8.1,2,No
+2022-07-26,South,Electronics,Alice,949.1,6,23.1,8.0,3,No
+2022-07-27,North,Home & Garden,Frank,505.72,4,27.4,9.3,2,No
+2022-07-28,Central,Books,Carol,154.87,4,25.8,7.5,3,No
+2022-07-29,East,Electronics,Eve,1212.03,8,22.7,8.6,2,No
+2022-07-30,West,Apparel,Bob,350.88,5,26.9,7.2,3,No
+2022-07-31,South,Sports,David,589.5,5,25.3,7.9,2,No
+2022-08-01,North,Electronics,Alice,1032.7,6,23.7,7.1,3,No
+2022-08-02,Central,Home & Garden,Frank,524.83,4,26.5,9.5,2,No
+2022-08-03,East,Books,Carol,118.67,2,29.4,7.0,5,No
+2022-08-04,West,Electronics,Eve,1185.17,7,23.0,8.7,2,No
+2022-08-05,South,Apparel,Bob,306.68,4,27.6,7.0,3,No
+2022-08-06,North,Sports,David,568.64,5,25.5,8.2,2,No
+2022-08-07,Central,Electronics,Alice,1101.32,7,23.3,8.3,3,No
+2022-08-08,East,Home & Garden,Frank,488.38,3,27.8,9.8,2,No
+2022-08-09,West,Books,Carol,125.15,3,28.8,6.9,4,No
+2022-08-10,South,Electronics,Eve,897.19,5,23.6,7.6,3,No
+2022-08-11,North,Apparel,Bob,314.53,5,27.3,8.5,2,No
+2022-08-12,Central,Sports,David,555.79,4,26.0,8.8,3,No
+2022-08-13,East,Electronics,Alice,1160.07,7,22.9,8.4,2,No
+2022-08-14,West,Home & Garden,Frank,518.48,4,27.0,9.1,3,No
+2022-08-15,South,Books,Carol,143.06,3,26.3,7.4,3,No
+2022-08-16,North,Electronics,Eve,1011.07,6,23.5,8.2,2,No
+2022-08-17,Central,Apparel,Bob,285.11,3,28.0,8.9,3,No
+2022-08-18,East,Sports,David,600.91,5,24.8,8.6,2,No
+2022-08-19,West,Electronics,Alice,1133.38,7,23.2,7.8,3,No
+2022-08-20,South,Home & Garden,Frank,536.03,4,26.7,9.7,2,No
+2022-08-21,North,Books,Carol,141.19,4,25.7,7.2,4,No
+2022-08-22,Central,Electronics,Eve,1068.92,6,23.7,8.5,2,No
+2022-08-23,East,Apparel,Bob,297.52,4,27.1,8.3,3,No
+2022-08-24,West,Sports,David,627.08,5,24.4,8.0,2,No
+2022-08-25,South,Electronics,Alice,955.83,6,23.0,8.1,3,No
+2022-08-26,North,Home & Garden,Frank,510.17,4,27.3,9.4,2,No
+2022-08-27,Central,Books,Carol,158.62,4,25.7,7.6,3,No
+2022-08-28,East,Electronics,Eve,1218.88,8,22.6,8.7,2,No
+2022-08-29,West,Apparel,Bob,357.23,5,26.8,7.1,3,No
+2022-08-30,South,Sports,David,593.61,5,25.2,7.8,2,No
+2022-08-31,North,Electronics,Alice,1039.81,6,23.6,7.0,3,No
+2022-09-01,Central,Home & Garden,Frank,528.68,4,26.4,9.6,2,No
+2022-09-02,East,Books,Carol,122.4,2,29.2,7.1,5,No
+2022-09-03,West,Electronics,Eve,1193.62,7,22.9,8.8,2,No
+2022-09-04,South,Apparel,Bob,310.43,4,27.5,6.9,3,No
+2022-09-05,North,Sports,David,572.77,5,25.4,8.1,2,No
+2022-09-06,Central,Electronics,Alice,1107.97,7,23.2,8.4,3,No
+2022-09-07,East,Home & Garden,Frank,492.63,3,27.7,9.9,2,No
+2022-09-08,West,Books,Carol,128.58,3,28.6,7.0,4,No
+2022-09-09,South,Electronics,Eve,905.04,5,23.5,7.7,3,Yes
+2022-09-10,North,Apparel,Bob,318.1,5,27.2,8.6,2,No
+2022-09-11,Central,Sports,David,560.33,4,25.9,8.9,3,No
+2022-09-12,East,Electronics,Alice,1167.62,7,22.8,8.5,2,No
+2022-09-13,West,Home & Garden,Frank,522.21,4,26.9,9.2,3,No
+2022-09-14,South,Books,Carol,146.49,3,26.1,7.5,3,No
+2022-09-15,North,Electronics,Eve,1018.43,6,23.4,8.3,2,Yes
+2022-09-16,Central,Apparel,Bob,288.67,3,27.9,9.0,3,No
+2022-09-17,East,Sports,David,605.32,5,24.7,8.7,2,No
+2022-09-18,West,Electronics,Alice,1140.93,7,23.1,7.9,3,No
+2022-09-19,South,Home & Garden,Frank,540.58,4,26.6,9.8,2,No
+2022-09-20,North,Books,Carol,144.76,4,25.5,7.3,4,No
+2022-09-21,Central,Electronics,Eve,1076.47,6,23.6,8.6,2,No
+2022-09-22,East,Apparel,Bob,302.07,4,27.0,8.4,3,No
+2022-09-23,West,Sports,David,632.23,5,24.3,7.9,2,No
+2022-09-24,South,Electronics,Alice,962.56,6,22.9,8.2,3,No
+2022-09-25,North,Home & Garden,Frank,514.62,4,27.2,9.5,2,No
+2022-09-26,Central,Books,Carol,162.37,4,25.6,7.7,3,No
+2022-09-27,East,Electronics,Eve,1225.73,8,22.5,8.8,2,No
+2022-09-28,West,Apparel,Bob,363.58,5,26.7,7.0,3,No
+2022-09-29,South,Sports,David,597.72,5,25.1,7.7,2,No
+2022-09-30,North,Electronics,Alice,1046.92,6,23.5,6.9,3,Yes`;
+
+function loadDemo() {
+  const btn = document.getElementById('demo-btn');
+  btn.disabled = true;
+  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> Loading demo…`;
+  const blob = new Blob([DEMO_CSV], { type: 'text/csv' });
+  const file = new File([blob], 'demo_data.csv', { type: 'text/csv' });
+  btn.disabled = false;
+  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Try Demo Dataset <span class="demo-badge">250 rows</span>`;
+  handleFile(file);
+}
+
+function handleFile(file) {
+  if (!file.name.endsWith('.csv')) { alert('Please upload a CSV file.'); return; }
+  const fd = new FormData();
+  fd.append('file', file);
+  showLoading('Analyzing your data…');
+  fetch('/api/analyze', { method: 'POST', body: fd })
+    .then(r => r.json())
+    .then(data => {
+      hideLoading();
+      if (data.error) { alert('Error: ' + data.error); return; }
+      state.sessionId = data.session_id;
+      renderResults(data);
+    })
+    .catch(err => { hideLoading(); alert('Request failed: ' + err); });
+}
+
+function showLoading(msg) {
+  document.getElementById('loading-text').textContent = msg || 'Working…';
+  document.getElementById('loading').classList.add('active');
+}
+function hideLoading() {
+  document.getElementById('loading').classList.remove('active');
+}
+
+function renderResults(d) {
+  document.getElementById('upload-section').style.display = 'none';
+  document.getElementById('section-tabs').style.display = 'flex';
+  document.getElementById('results').classList.add('visible');
+  renderOverview(d);
+  renderQuality(d);
+  renderStats(d);
+  renderDistributions(d);
+  renderCorrelation(d);
+  renderTimeSeries(d);
+  setupScrollSpy();
+}
+
+function renderOverview(d) {
+  document.getElementById('shape-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-num" style="color:var(--primary-pale)">${d.shape[0].toLocaleString()}</div><div class="stat-lbl">Rows</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#34d399">${d.shape[1].toLocaleString()}</div><div class="stat-lbl">Columns</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#fcd34d">${Object.values(d.missing||{}).filter(v=>v>0).length}</div><div class="stat-lbl">Cols w/ Missing</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#fca5a5">${d.duplicates||0}</div><div class="stat-lbl">Duplicates</div></div>
+  `;
+  document.getElementById('dtype-list').innerHTML = Object.entries(d.dtypes||{}).map(([col, t]) => {
+    const cls = t.includes('int') || t.includes('float') ? 'badge-blue'
+              : t.includes('object') ? 'badge-gray'
+              : t.includes('datetime') ? 'badge-green'
+              : 'badge-yellow';
+    return `<span class="badge ${cls}" title="${col}: ${t}">${col} <em style="font-style:normal;opacity:0.7">${t}</em></span>`;
+  }).join('');
+  document.getElementById('preview-table').innerHTML = makeTable(d.preview.columns, d.preview.data);
+}
+
+function renderQuality(d) {
+  const missingTotal = Object.values(d.missing||{}).reduce((a,b)=>a+b,0);
+  document.getElementById('quality-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-num" style="color:#fcd34d">${missingTotal.toLocaleString()}</div><div class="stat-lbl">Missing Cells</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#fca5a5">${d.duplicates||0}</div><div class="stat-lbl">Duplicate Rows</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--muted)">${(d.fully_empty||[]).length}</div><div class="stat-lbl">Fully Empty Cols</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--muted)">${(d.more50||[]).length}</div><div class="stat-lbl">&gt;50% Missing</div></div>
+  `;
+  let issues = '';
+  if ((d.fully_empty||[]).length)
+    issues += `<div class="info-banner banner-red">Fully empty columns (${d.fully_empty.length}): ${d.fully_empty.map(c=>`<code>${c}</code>`).join(', ')}</div>`;
+  if ((d.more50||[]).length)
+    issues += `<div class="info-banner banner-yellow">Columns with &gt;50% missing (${d.more50.length}): ${d.more50.map(c=>`<code>${c}</code>`).join(', ')}</div>`;
+  for (const [kind, cols] of Object.entries(d.inconsistent||{})) {
+    if (cols && cols.length)
+      issues += `<div class="info-banner banner-blue">Inconsistent format — ${kind}: ${cols.map(c=>`<code>${c}</code>`).join(', ')}</div>`;
+  }
+  if (!issues) issues = `<div class="info-banner banner-green">No critical data quality issues detected.</div>`;
+  document.getElementById('quality-issues').innerHTML = issues;
+
+  const missCols = Object.entries(d.missing||{}).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+  if (missCols.length) {
+    const rows = missCols.map(([col, cnt]) => {
+      const pct = ((cnt / d.shape[0]) * 100).toFixed(1);
+      return [col, cnt,
+        `<div class="miss-bar-wrap"><div class="miss-bar-bg"><div class="miss-bar-fill" style="width:${pct}%"></div></div><span style="font-size:0.78rem;color:var(--muted)">${pct}%</span></div>`
+      ];
+    });
+    document.getElementById('missing-table').innerHTML = makeTable(['Column','Missing Count','% Missing'], rows);
+  } else {
+    document.getElementById('missing-table').innerHTML =
+      '<div class="info-banner banner-green" style="margin:0">No missing values found.</div>';
+  }
+}
+
+function renderStats(d) {
+  const ns = d.numeric_stats || [];
+  if (ns.length) {
+    const cols = Object.keys(ns[0]);
+    const rows = ns.map(r => cols.map(c => {
+      const v = r[c];
+      if (c === 'column') return v;
+      return (typeof v === 'number') ? fmtNum(v) : (v == null ? '—' : v);
+    }));
+    document.getElementById('numeric-stats-table').innerHTML = makeTable(cols, rows);
+  } else {
+    document.getElementById('numeric-stats-table').innerHTML =
+      '<div class="info-banner banner-blue" style="margin:0">No numeric columns detected.</div>';
+  }
+  const cats = d.categorical_stats || {};
+  if (Object.keys(cats).length) {
+    const catRows = Object.entries(cats).map(([col, info]) => {
+      const topStr = Object.entries(info.top_categories||{}).slice(0,5).map(([k,v])=>`${k} (${v})`).join(', ');
+      return [col, info.unique ?? '—', topStr];
+    });
+    document.getElementById('cat-stats-wrap').innerHTML = makeTable(['Column','Unique Values','Top Categories (up to 5)'], catRows);
+  } else {
+    document.getElementById('cat-stats-wrap').innerHTML =
+      '<div class="info-banner banner-blue" style="margin:0">No categorical columns detected.</div>';
+  }
+}
+
+function renderDistributions(d) {
+  const charts    = d.charts    || {};
+  const catCharts = d.cat_charts || {};
+  document.getElementById('num-charts').innerHTML = Object.keys(charts).length
+    ? Object.entries(charts).map(([col, b64]) =>
+        `<div class="chart-card"><div class="chart-caption">${col}</div><img src="data:image/png;base64,${b64}" alt="${col} distribution" loading="lazy"></div>`
+      ).join('')
+    : '<div class="info-banner banner-blue">No numeric distribution charts available.</div>';
+  document.getElementById('cat-charts').innerHTML = Object.keys(catCharts).length
+    ? Object.entries(catCharts).map(([col, b64]) =>
+        `<div class="chart-card"><div class="chart-caption">${col}</div><img src="data:image/png;base64,${b64}" alt="${col} categories" loading="lazy"></div>`
+      ).join('')
+    : '<div class="info-banner banner-blue">No categorical charts available.</div>';
+}
+
+function renderCorrelation(d) {
+  if ((d.multicollinear||[]).length) {
+    const pairs = d.multicollinear.map(p=>`${p.col_a} ↔ ${p.col_b} (${p.corr})`).join(', ');
+    document.getElementById('corr-warnings').innerHTML =
+      `<div class="info-banner banner-yellow">⚠️ Potential multicollinearity detected: ${pairs}</div>`;
+  }
+  if ((d.top_pairs||[]).length) {
+    const rows = d.top_pairs.map(p => {
+      const barW = Math.round(Math.abs(p.corr) * 80);
+      const cls  = p.corr >= 0 ? 'corr-pos' : 'corr-neg';
+      return [p.col_a, p.col_b,
+        `<div class="corr-bar-wrap"><div class="corr-bar ${cls}" style="width:${barW}px"></div><span style="font-size:0.82rem;min-width:40px">${p.corr}</span></div>`
+      ];
+    });
+    document.getElementById('corr-table').innerHTML = makeTable(['Column A','Column B','Correlation'], rows);
+  } else {
+    document.getElementById('corr-table').innerHTML =
+      '<div class="info-banner banner-blue" style="margin:0">Not enough numeric columns for correlation analysis.</div>';
+  }
+  if (d.corr_heatmap) {
+    document.getElementById('corr-heatmap').innerHTML =
+      `<img src="data:image/png;base64,${d.corr_heatmap}" alt="Correlation heatmap" style="max-width:100%;border-radius:8px;border:1px solid var(--border)">`;
+  }
+}
+
+function renderTimeSeries(d) {
+  const ts = d.time_series || {};
+  document.getElementById('ts-body').innerHTML = ts.datetime_column
+    ? `<div class="info-banner banner-green">✅ Datetime column detected: <strong>${ts.datetime_column}</strong><br>Time-series resampling was computed (daily, weekly, monthly).</div>`
+    : `<div class="info-banner banner-blue">No datetime column detected in this dataset. Time-series analysis is not applicable.</div>`;
+}
+
+function cleanDataset() {
+  if (!state.sessionId) return;
+  const btn = document.getElementById('clean-btn');
+  btn.disabled = true; btn.textContent = 'Cleaning…';
+  showLoading('Cleaning dataset…');
+  fetch('/api/clean', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({session_id: state.sessionId}),
+  })
+  .then(r => r.json())
+  .then(data => {
+    hideLoading(); btn.textContent = '✅ Cleaned';
+    if (data.error) { alert('Error: ' + data.error); btn.disabled = false; return; }
+    const s = data.summary || {};
+    document.getElementById('clean-summary').innerHTML = `
+      <div class="info-banner banner-green" style="margin-bottom:0.75rem">
+        ✅ Cleaning complete — shape went from
+        <strong>${s.before_shape ? s.before_shape[0]+'×'+s.before_shape[1] : '?'}</strong> to
+        <strong>${data.shape[0]}×${data.shape[1]}</strong>.
+        Dropped <strong>${s.dropped_duplicates||0}</strong> duplicate rows
+        ${(s.dropped_fully_empty_cols||[]).length ? `and <strong>${s.dropped_fully_empty_cols.length}</strong> fully empty column(s)` : ''}.
+      </div>`;
+    document.getElementById('clean-preview-table').innerHTML = makeTable(data.preview.columns, data.preview.data);
+    document.getElementById('clean-result').classList.add('visible');
+  })
+  .catch(err => { hideLoading(); alert('Clean failed: '+err); btn.disabled=false; btn.textContent='Clean Dataset'; });
+}
+
+function generateInsights() {
+  if (!state.sessionId) return;
+  const btn   = document.getElementById('ai-btn');
+  const out   = document.getElementById('ai-output');
+  const model = document.getElementById('model-select').value;
+  const temp  = parseFloat(document.getElementById('temp-range').value);
+  btn.disabled = true; btn.textContent = 'Generating…'; out.classList.remove('visible');
+  showLoading('Generating AI insights…');
+  fetch('/api/ai-insights', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({session_id: state.sessionId, model, temperature: temp}),
+  })
+  .then(r => r.json())
+  .then(data => {
+    hideLoading(); btn.disabled = false;
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> Generate AI Insights`;
+    if (data.error) { alert('Error: '+data.error); return; }
+    out.textContent = data.insights; out.classList.add('visible');
+    scrollToSection('ai');
+  })
+  .catch(err => { hideLoading(); btn.disabled=false; alert('AI request failed: '+err); });
+}
+
+function makeTable(columns, rows) {
+  if (!rows || !rows.length) return '<div class="info-banner banner-blue" style="margin:0">No data.</div>';
+  const hdr = columns.map(c => `<th>${c}</th>`).join('');
+  const bdy = rows.map(row =>
+    '<tr>' + row.map(cell => {
+      if (cell === null || cell === undefined) return '<td style="color:var(--muted)">—</td>';
+      const s = String(cell);
+      if (s.includes('<')) return `<td>${s}</td>`;
+      return `<td title="${s.replace(/"/g,'&quot;')}">${s}</td>`;
+    }).join('') + '</tr>'
+  ).join('');
+  return `<table><thead><tr>${hdr}</tr></thead><tbody>${bdy}</tbody></table>`;
+}
+
+function fmtNum(n) {
+  if (n === null || n === undefined) return '—';
+  if (Math.abs(n) >= 1e6) return n.toExponential(2);
+  if (Math.abs(n) >= 100) return Math.round(n).toLocaleString();
+  return parseFloat(n.toFixed(4)).toString();
+}
+
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+}
+
+function setupScrollSpy() {
+  const sections = ['overview','quality','stats','distributions','correlation','timeseries','ai'];
+  const buttons  = document.querySelectorAll('.tab-btn');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = sections.indexOf(e.target.id);
+        if (idx >= 0) buttons.forEach((b,i) => b.classList.toggle('active', i===idx));
+      }
+    });
+  }, { threshold: 0.25, rootMargin: '-64px 0px -60% 0px' });
+  sections.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
+}
+</script>
+</body>
+</html>
